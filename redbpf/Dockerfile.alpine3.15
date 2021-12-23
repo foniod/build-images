@@ -21,8 +21,7 @@ RUN apk add --no-cache \
 
 RUN llvm-config --version | grep -q '^12'
 
-# RedBPF depends on LLVM12 by default and Rust v1.52~v1.55 uses LLVM12
-# cf) RedBPF can rely on LLVM13 and Rust v1.56~ uses LLVM13
+# Alpine 3.15 only supports LLVM 12 so fix Rust 1.55
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
           --default-toolchain 1.55 \

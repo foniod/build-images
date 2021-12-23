@@ -16,10 +16,11 @@ RUN pacman --noconfirm -Syu \
 
 RUN llvm-config --version | grep -q '^13'
 
-# RedBPF can rely on LLVM13 and Rust v1.56~ uses LLVM13
+# Install current stable Rust. The first goal of RedBPF build test is to
+# support latest Rust release.
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
-          --default-toolchain 1.57 \
+          --default-toolchain stable \
           --profile minimal \
           --no-modify-path \
     && rm -f rustup.sh \

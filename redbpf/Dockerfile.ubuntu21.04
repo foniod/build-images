@@ -9,24 +9,25 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 RUN apt-get update \
     && apt-get -y install \
     curl \
+    wget \
     build-essential \
-    libllvm12 \
-    llvm-12-dev \
-    libclang-12-dev \
+    software-properties-common \
+    lsb-release \
     libelf-dev \
-    linux-headers-generic
+    linux-headers-generic \
+    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 13 && rm -f ./llvm.sh
 RUN apt-get -y install \
     "linux-image-$(ls /lib/modules)" \
     && apt-get clean -y
 
-RUN ln -s /usr/bin/llvm-config-12 /usr/bin/llvm-config
-RUN llvm-config --version | grep -q '^12'
+RUN ln -s /usr/bin/llvm-config-13 /usr/bin/llvm-config
+RUN llvm-config --version | grep -q '^13'
 
-# RedBPF depends on LLVM12 by default and Rust v1.52~v1.55 uses LLVM12
-# cf) RedBPF can rely on LLVM13 and Rust v1.56~ uses LLVM13
+# Install current stable Rust. The first goal of RedBPF build test is to
+# support latest Rust release.
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
-          --default-toolchain 1.55 \
+          --default-toolchain stable \
           --profile minimal \
           --no-modify-path \
     && rm -f rustup.sh \
@@ -37,7 +38,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup.sh \
 
 COPY extract-btf-aarch64.rs .
 
-RUN if [ $TARGETPLATFORM = "linux/arm64" ]; then \
+RUN if [ x$TARGETPLATFORM = x"linux/arm64" ]; then \
       rustc extract-btf-aarch64.rs \
       && gzip -dc /boot/vmlinuz | ./extract-btf-aarch64 /dev/stdin /boot/vmlinux-btf; \
     else \

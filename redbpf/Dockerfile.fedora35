@@ -19,10 +19,11 @@ RUN dnf install -y \
 
 RUN llvm-config --version | grep -q '^13'
 
-# RedBPF can rely on LLVM13 and Rust v1.56~ uses LLVM13
+# Install current stable Rust. The first goal of RedBPF build test is to
+# support latest Rust release.
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
-          --default-toolchain 1.57 \
+          --default-toolchain stable \
           --profile minimal \
           --no-modify-path \
     && rm -f rustup.sh \
@@ -33,7 +34,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup.sh \
 
 COPY extract-btf-aarch64.rs .
 
-RUN if [ $TARGETPLATFORM = "linux/arm64" ]; then \
+RUN if [ x$TARGETPLATFORM = x"linux/arm64" ]; then \
       rustc extract-btf-aarch64.rs \
       && gzip -dc /lib/modules/*/vmlinuz | ./extract-btf-aarch64 /dev/stdin /boot/vmlinux-btf; \
     else \
