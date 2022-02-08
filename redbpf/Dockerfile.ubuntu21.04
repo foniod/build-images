@@ -8,6 +8,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN apt-get update \
     && apt-get -y install \
+    pkg-config \
     curl \
     wget \
     build-essential \

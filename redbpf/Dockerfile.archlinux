@@ -6,6 +6,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN pacman --noconfirm -Syu \
     && pacman -S --noconfirm \
+    pkg-config \
     llvm \
     llvm-libs \
     libffi \
