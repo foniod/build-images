@@ -6,6 +6,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH
 
 RUN dnf install -y \
+    pkg-config \
     clang-13.0.0 \
 	llvm-13.0.0 \
 	llvm-libs-13.0.0 \
