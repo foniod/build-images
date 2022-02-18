@@ -1,0 +1,31 @@
+FROM gentoo/stage3
+ARG TARGETPLATFORM
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:/usr/lib/llvm/13/bin:$PATH
+
+# could not find prebuilt llvm and clang in Feb 2022.
+RUN emerge --sync \
+    && emerge sys-devel/llvm \
+    sys-devel/clang \
+    virtual/libelf \
+    sys-kernel/gentoo-kernel-bin
+
+RUN llvm-config --version | grep -q '^13'
+
+# Install current stable Rust. The first goal of RedBPF build test is to
+# support latest Rust release.
+RUN curl https://sh.rustup.rs -sSf > rustup.sh \
+    && sh rustup.sh -y \
+          --default-toolchain stable \
+          --profile minimal \
+          --no-modify-path \
+    && rm -f rustup.sh \
+    && rustup component add rustfmt \
+    && rustup --version \
+    && cargo -vV \
+    && rustc -vV
+
+# gentoo prebuilt kernel does not contain BTF section
+
+WORKDIR /build

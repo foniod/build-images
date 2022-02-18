@@ -194,6 +194,39 @@ jobs:
           docker push ${{ steps.x86_64-alpine315.outputs.image_id }}
           docker push ${{ steps.x86_64-archlinux.outputs.image_id }}
 
+  # NOTE: A redbpf-build-aarch64-gentoo-and-push job can not be supported since
+  # it takes over 6 hours to finish building the docker image
+
+  redbpf-build-x86_64-gentoo-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up version information
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          [ "$VERSION" == "$MAIN_BRANCH" ] && VERSION=latest
+          echo "version=$VERSION" >> $GITHUB_ENV
+      -
+        name: Build x86_64 gentoo for RedBPF
+        id: x86_64-gentoo
+        run: |
+          VERSION=${{ env.version }}-x86_64-gentoo
+          docker build -f redbpf/Dockerfile.gentoo \
+          -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
+          echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
+      -
+        name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      -
+        name: Push image
+        if: github.event_name == 'push'
+        run: |
+          docker push ${{ steps.x86_64-gentoo.outputs.image_id }}
+
   build-and-push:
     runs-on: ubuntu-latest
     steps:
