@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM alpine:edge
 
 ARG TARGETPLATFORM
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -15,17 +15,16 @@ RUN apk add --no-cache \
     linux-lts-dev \
     linux-lts \
     clang-libs \
-    llvm12 \
-    llvm12-libs \
-    llvm12-dev \
-    llvm12-static
+    llvm13 \
+    llvm13-libs \
+    llvm13-dev \
+    llvm13-static
 
-RUN llvm-config --version | grep -q '^12'
+RUN llvm-config --version | grep -q '^13'
 
-# Alpine 3.15 only supports LLVM 12 so fix Rust 1.55
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
-          --default-toolchain 1.55 \
+          --default-toolchain 1.59 \
           --profile minimal \
           --no-modify-path \
     && rm -f rustup.sh \
