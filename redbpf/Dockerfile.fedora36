@@ -1,4 +1,4 @@
-FROM fedora:35
+FROM fedora:36
 
 ARG TARGETPLATFORM
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -7,18 +7,18 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN dnf install -y \
     pkg-config \
-    clang-13.0.0 \
-	llvm-13.0.0 \
-	llvm-libs-13.0.0 \
-	llvm-devel-13.0.0 \
-	llvm-static-13.0.0 \
+    clang \
+	llvm \
+	llvm-libs \
+	llvm-devel \
+	llvm-static \
 	kernel \
 	kernel-devel \
 	elfutils-libelf-devel \
 	make \
     zstd
 
-RUN llvm-config --version | grep -q '^13'
+RUN llvm-config --version | grep -q '^14'
 
 # Install current stable Rust. The first goal of RedBPF build test is to
 # support latest Rust release.
