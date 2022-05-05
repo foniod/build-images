@@ -57,19 +57,11 @@ jobs:
           -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build aarch64 Fedora35 for RedBPF
-        id: aarch64-fedora35
+        name: Build aarch64 Fedora36 for RedBPF
+        id: aarch64-fedora36
         run: |
-          VERSION=${{ env.version }}-aarch64-fedora35
-          docker buildx build -f redbpf/Dockerfile.fedora35 --platform linux/arm64 \
-          -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
-          echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
-      -
-        name: Build aarch64 Ubuntu21.04 for RedBPF
-        id: aarch64-ubuntu2104
-        run: |
-          VERSION=${{ env.version }}-aarch64-ubuntu21.04
-          docker buildx build -f redbpf/Dockerfile.ubuntu21.04 --platform linux/arm64 \
+          VERSION=${{ env.version }}-aarch64-fedora36
+          docker buildx build -f redbpf/Dockerfile.fedora36 --platform linux/arm64 \
           -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
@@ -81,19 +73,19 @@ jobs:
           -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build aarch64 Ubuntu18.04 LTS for RedBPF
+        name: Build aarch64 Ubuntu22.04 LTS for RedBPF
         id: aarch64-ubuntu1804
         run: |
-          VERSION=${{ env.version }}-aarch64-ubuntu18.04
-          docker buildx build -f redbpf/Dockerfile.ubuntu18.04 --platform linux/arm64 \
+          VERSION=${{ env.version }}-aarch64-ubuntu22.04
+          docker buildx build -f redbpf/Dockerfile.ubuntu22.04 --platform linux/arm64 \
           -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build aarch64 alpine3.15 for RedBPF
+        name: Build aarch64 alpine edge for RedBPF
         id: aarch64-alpine315
         run: |
-          VERSION=${{ env.version }}-aarch64-alpine3.15
-          docker buildx build -f redbpf/Dockerfile.alpine3.15 --platform linux/arm64 \
+          VERSION=${{ env.version }}-aarch64-alpine-edge
+          docker buildx build -f redbpf/Dockerfile.alpine-edge --platform linux/arm64 \
           -t $REDBPF_IMAGE_NAME:$VERSION --load ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
@@ -104,11 +96,10 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker push ${{ steps.aarch64-debian11.outputs.image_id }}
-          docker push ${{ steps.aarch64-fedora35.outputs.image_id }}
-          docker push ${{ steps.aarch64-ubuntu2104.outputs.image_id }}
+          docker push ${{ steps.aarch64-fedora36.outputs.image_id }}
           docker push ${{ steps.aarch64-ubuntu2004.outputs.image_id }}
-          docker push ${{ steps.aarch64-ubuntu1804.outputs.image_id }}
-          docker push ${{ steps.aarch64-alpine315.outputs.image_id }}
+          docker push ${{ steps.aarch64-ubuntu2204.outputs.image_id }}
+          docker push ${{ steps.aarch64-alpine-edge.outputs.image_id }}
 
   redbpf-build-x86_64-and-push:
     runs-on: ubuntu-latest
@@ -132,19 +123,11 @@ jobs:
           -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build x86_64 Fedora35 for RedBPF
-        id: x86_64-fedora35
+        name: Build x86_64 Fedora36 for RedBPF
+        id: x86_64-fedora36
         run: |
-          VERSION=${{ env.version }}-x86_64-fedora35
-          docker build -f redbpf/Dockerfile.fedora35 \
-          -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
-          echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
-      -
-        name: Build x86_64 Ubuntu21.04 for RedBPF
-        id: x86_64-ubuntu2104
-        run: |
-          VERSION=${{ env.version }}-x86_64-ubuntu21.04
-          docker build -f redbpf/Dockerfile.ubuntu21.04 \
+          VERSION=${{ env.version }}-x86_64-fedora36
+          docker build -f redbpf/Dockerfile.fedora36 \
           -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
@@ -156,19 +139,19 @@ jobs:
           -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build x86_64 Ubuntu18.04 LTS for RedBPF
+        name: Build x86_64 Ubuntu22.04 LTS for RedBPF
         id: x86_64-ubuntu1804
         run: |
-          VERSION=${{ env.version }}-x86_64-ubuntu18.04
-          docker build -f redbpf/Dockerfile.ubuntu18.04 \
+          VERSION=${{ env.version }}-x86_64-ubuntu22.04
+          docker build -f redbpf/Dockerfile.ubuntu22.04 \
           -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
-        name: Build x86_64 alpine3.15 for RedBPF
-        id: x86_64-alpine315
+        name: Build x86_64 alpine-edge for RedBPF
+        id: x86_64-alpine-edge
         run: |
-          VERSION=${{ env.version }}-x86_64-alpine3.15
-          docker build -f redbpf/Dockerfile.alpine3.15 \
+          VERSION=${{ env.version }}-x86_64-alpine-edge
+          docker build -f redbpf/Dockerfile.alpine-edge \
           -t $REDBPF_IMAGE_NAME:$VERSION ./redbpf
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
@@ -187,11 +170,10 @@ jobs:
         if: github.event_name == 'push'
         run: |
           docker push ${{ steps.x86_64-debian11.outputs.image_id }}
-          docker push ${{ steps.x86_64-fedora35.outputs.image_id }}
-          docker push ${{ steps.x86_64-ubuntu2104.outputs.image_id }}
+          docker push ${{ steps.x86_64-fedora36.outputs.image_id }}
           docker push ${{ steps.x86_64-ubuntu2004.outputs.image_id }}
-          docker push ${{ steps.x86_64-ubuntu1804.outputs.image_id }}
-          docker push ${{ steps.x86_64-alpine315.outputs.image_id }}
+          docker push ${{ steps.x86_64-ubuntu2204.outputs.image_id }}
+          docker push ${{ steps.x86_64-alpine-edge.outputs.image_id }}
           docker push ${{ steps.x86_64-archlinux.outputs.image_id }}
 
   # NOTE: A redbpf-build-aarch64-gentoo-and-push job can not be supported since
