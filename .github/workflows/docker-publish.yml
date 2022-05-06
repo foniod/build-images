@@ -74,7 +74,7 @@ jobs:
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
         name: Build aarch64 Ubuntu22.04 LTS for RedBPF
-        id: aarch64-ubuntu1804
+        id: aarch64-ubuntu2204
         run: |
           VERSION=${{ env.version }}-aarch64-ubuntu22.04
           docker buildx build -f redbpf/Dockerfile.ubuntu22.04 --platform linux/arm64 \
@@ -140,7 +140,7 @@ jobs:
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
         name: Build x86_64 Ubuntu22.04 LTS for RedBPF
-        id: x86_64-ubuntu1804
+        id: x86_64-ubuntu2204
         run: |
           VERSION=${{ env.version }}-x86_64-ubuntu22.04
           docker build -f redbpf/Dockerfile.ubuntu22.04 \
