@@ -82,7 +82,7 @@ jobs:
           echo "::set-output name=image_id::$REDBPF_IMAGE_NAME:$VERSION"
       -
         name: Build aarch64 alpine edge for RedBPF
-        id: aarch64-alpine315
+        id: aarch64-alpine-edge
         run: |
           VERSION=${{ env.version }}-aarch64-alpine-edge
           docker buildx build -f redbpf/Dockerfile.alpine-edge --platform linux/arm64 \
