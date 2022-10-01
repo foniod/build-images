@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM fedora:36
 
 ARG openssl_arch=linux-x86_64
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -6,21 +6,24 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update \
-    && apt-get -y install curl wget lsb-release wget software-properties-common debhelper cmake \
-       libelf-dev bison flex libedit-dev python-is-python3 python3-netaddr \
-       python3-pyroute2 luajit libluajit-5.1-dev arping iperf netperf ethtool \
-       devscripts zlib1g-dev libfl-dev \
-       pkg-config libssl-dev \
-       git \
-       musl musl-tools musl-dev \
-       capnproto \
-       linux-headers-generic \
-    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 14 && rm -f ./llvm.sh \
-    && apt-get update && apt-get -y install llvm libllvm14 llvm-14-dev libclang-14-dev clang-format-14 clang \
-    && apt-get clean -y
+RUN echo "max_parallel_download=20" >> /etc/dnf/dnf.conf \
+    && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
+    && dnf install -y clang-14.0.0 \
+	llvm-14.0.0 \
+	llvm-libs-14.0.0 \
+	llvm-devel-14.0.0 \
+	llvm-static-14.0.0 \
+	kernel \
+	kernel-devel \
+	elfutils-libelf-devel \
+	ca-certificates \
+	musl-devel musl-clang musl-libc musl-libc-static musl-gcc \
+	openssl-devel perl-podlators perl-File-Compare \
+	capnproto \
+	dnf-utils \
+	git \
+	make makedepend zstd bzip2
 
-RUN ln -sf /usr/bin/llvm-config-14 /usr/bin/llvm-config
 RUN llvm-config --version | grep -q '^14'
 
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
@@ -34,8 +37,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && rustup --version \
     && cargo --version \
     && rustc --version \
-    && cargo install bindgen \
-    && rm -f rustup.sh
+    && cargo install bindgen
 
 RUN echo "Building OpenSSL" \
     && VERS=1.0.2p \
@@ -55,4 +57,5 @@ ENV OPENSSL_DIR=/usr/local/musl/$TARGET/ \
     OPENSSL_LIB_DIR=/usr/local/musl/$TARGET/lib/ \
     OPENSSL_STATIC=1
 
+COPY yum/repos.d/ /etc/yum.repos.d/
 WORKDIR /build

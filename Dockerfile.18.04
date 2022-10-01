@@ -16,10 +16,13 @@ RUN apt-get update \
        musl musl-tools musl-dev \
        capnproto \
        linux-base libkmod2 kmod \
-    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 12 && rm -f ./llvm.sh \
-    && apt-get update && apt-get -y install llvm libllvm12 llvm-12-dev libclang-12-dev clang-format-12 clang \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 14 && rm -f ./llvm.sh \
+    && apt-get update && apt-get -y install llvm libllvm14 llvm-14-dev libclang-14-dev clang-format-14 clang \
     && apt-get clean -y
 
+RUN ln -sf /usr/bin/llvm-config-14 /usr/bin/llvm-config
+RUN llvm-config --version | grep -q '^14'
 
 # Install kernel v4.19 to check the oldest supported kernel
 WORKDIR /tmp/kernel
