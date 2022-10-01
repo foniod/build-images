@@ -9,17 +9,17 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 RUN echo "max_parallel_download=20" >> /etc/dnf/dnf.conf \
     && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
     && dnf install -y \
-    pkg-config \
-    clang \
-	llvm \
-	llvm-libs \
-	llvm-devel \
-	llvm-static \
-	kernel \
-	kernel-devel \
-	elfutils-libelf-devel \
-	make \
-    zstd
+        pkg-config \
+        clang \
+        llvm \
+        llvm-libs \
+        llvm-devel \
+        llvm-static \
+        kernel \
+        kernel-devel \
+        elfutils-libelf-devel \
+        make \
+        zstd
 
 RUN llvm-config --version | grep -q '^14'
 

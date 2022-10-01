@@ -7,9 +7,9 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 # could not find prebuilt llvm and clang in Feb 2022.
 RUN emerge --sync \
     && emerge sys-devel/llvm \
-    sys-devel/clang \
-    virtual/libelf \
-    sys-kernel/gentoo-kernel-bin
+        sys-devel/clang \
+        virtual/libelf \
+        sys-kernel/gentoo-kernel-bin
 
 RUN llvm-config --version | grep -q '^14'
 

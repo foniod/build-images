@@ -9,20 +9,29 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 RUN echo "max_parallel_download=20" >> /etc/dnf/dnf.conf \
     && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
     && dnf install -y clang-14.0.0 \
-	llvm-14.0.0 \
-	llvm-libs-14.0.0 \
-	llvm-devel-14.0.0 \
-	llvm-static-14.0.0 \
-	kernel \
-	kernel-devel \
-	elfutils-libelf-devel \
-	ca-certificates \
-	musl-devel musl-clang musl-libc musl-libc-static musl-gcc \
-	openssl-devel perl-podlators perl-File-Compare \
-	capnproto \
-	dnf-utils \
-	git \
-	make makedepend zstd bzip2
+        llvm-14.0.0 \
+        llvm-libs-14.0.0 \
+        llvm-devel-14.0.0 \
+        llvm-static-14.0.0 \
+        kernel \
+        kernel-devel \
+        elfutils-libelf-devel \
+        ca-certificates \
+        musl-devel \
+        musl-clang \
+        musl-libc \
+        musl-libc-static \
+        musl-gcc \
+        openssl-devel \
+        perl-podlators \
+        perl-File-Compare \
+        capnproto \
+        dnf-utils \
+        git \
+	    make \
+        makedepend \
+        zstd \
+        bzip2
 
 RUN llvm-config --version | grep -q '^14'
 

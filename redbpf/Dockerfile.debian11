@@ -8,15 +8,15 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN apt-get update \
     && apt-get -y install \
-    pkg-config \
-    curl \
-    wget \
-    lsb-release \
-    libelf-dev \
-    build-essential \
-    linux-headers-generic \
-    software-properties-common \
-    gnupg2 \
+        pkg-config \
+        curl \
+        wget \
+        lsb-release \
+        libelf-dev \
+        build-essential \
+        linux-headers-generic \
+        software-properties-common \
+        gnupg2 \
     && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 14 && rm -f ./llvm.sh \
     && apt-get -y install "linux-image-$(ls /lib/modules)" \
     && apt-get clean -y

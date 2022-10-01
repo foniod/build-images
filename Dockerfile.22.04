@@ -7,17 +7,42 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-    && apt-get -y install curl wget lsb-release wget software-properties-common \
-       debhelper cmake llvm libllvm14 llvm-14-dev libclang-14-dev \
-       libelf-dev bison flex libedit-dev clang-format-14 python-is-python3 python3-netaddr \
-       luajit libluajit-5.1-dev arping iperf netperf ethtool \
-       devscripts zlib1g-dev libfl-dev \
-       pkg-config libssl-dev \
-       git \
-       clang \
-       musl musl-tools musl-dev \
-       capnproto \
-       linux-headers-generic \
+    && apt-get -y install \
+        curl \
+        wget \
+        lsb-release \
+        software-properties-common \
+        debhelper \
+        cmake \
+        llvm \
+        libllvm14 \
+        llvm-14-dev \
+        libclang-14-dev \
+        libelf-dev \
+        bison \
+        flex \
+        libedit-dev \
+        clang-format-14 \
+        python-is-python3 \
+        python3-netaddr \
+        luajit \
+        libluajit-5.1-dev \
+        arping \
+        iperf \
+        netperf \
+        ethtool \
+        devscripts \
+        zlib1g-dev \
+        libfl-dev \
+        pkg-config \
+        libssl-dev \
+        git \
+        clang \
+        musl \
+        musl-tools\
+        musl-dev \
+        capnproto \
+        linux-headers-generic \
     && apt-get clean -y
 
 RUN ln -sf /usr/bin/llvm-config-14 /usr/bin/llvm-config
