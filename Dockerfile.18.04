@@ -7,19 +7,46 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
-    && apt-get -y install curl wget lsb-release wget software-properties-common debhelper cmake \
-       libelf-dev bison flex libedit-dev python python-netaddr \
-       python-pyroute2 luajit libluajit-5.1-dev arping iperf netperf ethtool \
-       devscripts zlib1g-dev libfl-dev \
-       pkg-config libssl-dev \
-       git \
-       musl musl-tools musl-dev \
-       capnproto \
-       linux-base libkmod2 kmod \
-    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 12 && rm -f ./llvm.sh \
-    && apt-get update && apt-get -y install llvm libllvm12 llvm-12-dev libclang-12-dev clang-format-12 clang \
+    && apt-get -y install \
+        curl \
+        wget \
+        lsb-release \
+        software-properties-common \
+        debhelper \
+        cmake \
+        libelf-dev \
+        bison \
+        flex \
+        libedit-dev \
+        python \
+        python-netaddr \
+        python-pyroute2 \
+        luajit \
+        libluajit-5.1-dev \
+        arping \
+        iperf \
+        netperf \
+        ethtool \
+        devscripts \
+        zlib1g-dev \
+        libfl-dev \
+        pkg-config \
+        libssl-dev \
+        git \
+        musl \
+        musl-tools \
+        musl-dev \
+        capnproto \
+        linux-base \
+        libkmod2 \
+        kmod \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 14 && rm -f ./llvm.sh \
+    && apt-get update && apt-get -y install llvm libllvm14 llvm-14-dev libclang-14-dev clang-format-14 clang \
     && apt-get clean -y
 
+RUN ln -sf /usr/bin/llvm-config-14 /usr/bin/llvm-config
+RUN llvm-config --version | grep -q '^14'
 
 # Install kernel v4.19 to check the oldest supported kernel
 WORKDIR /tmp/kernel
