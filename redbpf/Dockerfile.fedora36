@@ -5,7 +5,10 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH
 
-RUN dnf install -y \
+# Adding these 2 dnf.conf settings improved install times.
+RUN echo "max_parallel_download=20" >> /etc/dnf/dnf.conf \
+    && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
+    && dnf install -y \
     pkg-config \
     clang \
 	llvm \

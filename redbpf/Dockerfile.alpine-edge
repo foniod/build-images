@@ -15,12 +15,13 @@ RUN apk add --no-cache \
     linux-lts-dev \
     linux-lts \
     clang-libs \
-    llvm13 \
-    llvm13-libs \
-    llvm13-dev \
-    llvm13-static
+    llvm14 \
+    llvm14-libs \
+    llvm14-dev \
+    llvm14-static
 
-RUN llvm-config --version | grep -q '^13'
+RUN ln -sf /usr/lib/llvm14/bin/llvm-config /usr/bin/llvm-config
+RUN llvm-config --version | grep -q '^14'
 
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \

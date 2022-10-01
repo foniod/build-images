@@ -11,7 +11,7 @@ RUN emerge --sync \
     virtual/libelf \
     sys-kernel/gentoo-kernel-bin
 
-RUN llvm-config --version | grep -q '^13'
+RUN llvm-config --version | grep -q '^14'
 
 # Install current stable Rust. The first goal of RedBPF build test is to
 # support latest Rust release.
