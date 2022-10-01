@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - llvm14
 
     # Publish `v1.2.3` tags as releases.
     tags:
@@ -11,6 +12,9 @@ on:
 
   # Run tests for any PRs.
   pull_request:
+    types:
+      - opened
+      - edited
 
 env:
   REDBPF_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/redbpf-build
@@ -41,6 +45,12 @@ jobs:
           echo "Status:    ${{ steps.buildx.outputs.status }}"
           echo "Flags:     ${{ steps.buildx.outputs.flags }}"
           echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
+            
+      -
+        name: Set image name lowercase
+        run: |
+          echo "REDBPF_IMAGE_NAME=${REDBPF_IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       -
         name: Set up version information
         run: |
@@ -107,6 +117,11 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v2
+      -
+        name: Set image name lowercase
+        run: |
+          echo "REDBPF_IMAGE_NAME=${REDBPF_IMAGE_NAME,,}" >>${GITHUB_ENV}
+      
       -
         name: Set up version information
         run: |
@@ -186,6 +201,10 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
+        name: Set image name lowercase
+        run: |
+          echo "REDBPF_IMAGE_NAME=${REDBPF_IMAGE_NAME,,}" >>${GITHUB_ENV}
+      -
         name: Set up version information
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
@@ -214,6 +233,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set image name lowercase
+        run: |
+          echo "IMAGE_NAME=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
       - name: Set up version information
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
@@ -221,12 +244,12 @@ jobs:
           [ "$VERSION" == "$MAIN_BRANCH" ] && VERSION=latest
           echo "version=$VERSION" >> $GITHUB_ENV
 
-      - name: Build Ubuntu 21.04
-        id: ubuntu2104
+      - name: Build Ubuntu 22.04
+        id: ubuntu2204
         run: |
-          VERSION=${{ env.version }}-ubuntu-21.04
+          VERSION=${{ env.version }}-ubuntu-22.04
           docker build --no-cache \
-                       -f Dockerfile.21.04 \
+                       -f Dockerfile.22.04 \
                        -t $IMAGE_NAME:$VERSION \
                        .
           echo "::set-output name=image_id::$IMAGE_NAME:$VERSION"
@@ -251,22 +274,22 @@ jobs:
                        .
           echo "::set-output name=image_id::$IMAGE_NAME:$VERSION"
 
-      - name: Build Fedora 34
-        id: fedora34
+      - name: Build Fedora 36
+        id: fedora36
         run: |
-          VERSION=${{ env.version }}-fedora-34
+          VERSION=${{ env.version }}-fedora36
           docker build --no-cache \
-                       -f Dockerfile.fedora-34 \
+                       -f Dockerfile.fedora36 \
                        -t $IMAGE_NAME:$VERSION \
                        .
           echo "::set-output name=image_id::$IMAGE_NAME:$VERSION"
 
-      - name: Build Alpine 3.14
-        id: alpine314
+      - name: Build Alpine Edge
+        id: alpine-edge
         run: |
-          VERSION=${{ env.version }}-alpine
+          VERSION=${{ env.version }}-alpine-edge
           docker build --no-cache \
-                       -f Dockerfile.alpine \
+                       -f Dockerfile.alpine-edge \
                        -t $IMAGE_NAME:$VERSION \
                        .
           echo "::set-output name=image_id::$IMAGE_NAME:$VERSION"
@@ -277,8 +300,8 @@ jobs:
       - name: Push image
         if: github.event_name == 'push'
         run: |
-          docker push ${{ steps.ubuntu2104.outputs.image_id }}
+          docker push ${{ steps.ubuntu2204.outputs.image_id }}
           docker push ${{ steps.ubuntu2004.outputs.image_id }}
           docker push ${{ steps.ubuntu1804.outputs.image_id }}
-          docker push ${{ steps.fedora34.outputs.image_id }}
-          docker push ${{ steps.alpine314.outputs.image_id }}
+          docker push ${{ steps.fedora36.outputs.image_id }}
+          docker push ${{ steps.alpine-edge.outputs.image_id }}
