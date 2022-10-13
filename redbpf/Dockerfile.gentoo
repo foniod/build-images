@@ -4,6 +4,10 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:/usr/lib/llvm/13/bin:$PATH
 
+
+RUN emerge-webrsync
+RUN emerge app-portage/mirrorselect
+RUN mirrorselect -s3 -b10 -D -c USA
 # could not find prebuilt llvm and clang in Feb 2022.
 RUN emerge --sync \
     && emerge sys-devel/llvm \
@@ -11,6 +15,7 @@ RUN emerge --sync \
         virtual/libelf \
         sys-kernel/gentoo-kernel-bin
 
+RUN ln -sf /usr/lib/llvm/14/bin/llvm-config /usr/bin/llvm-config
 RUN llvm-config --version | grep -q '^14'
 
 # Install current stable Rust. The first goal of RedBPF build test is to
