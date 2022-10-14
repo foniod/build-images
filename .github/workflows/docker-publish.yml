@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - llvm14
 
     # Publish `v1.2.3` tags as releases.
     tags:
