@@ -8,20 +8,20 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN apt-get update \
     && apt-get -y install \
-    pkg-config \
-    curl \
-    wget \
-    lsb-release \
-    libelf-dev \
-    build-essential \
-    linux-headers-generic \
-    software-properties-common \
-    gnupg2 \
+        pkg-config \
+        curl \
+        wget \
+        lsb-release \
+        libelf-dev \
+        build-essential \
+        linux-headers-generic \
+        software-properties-common \
+        gnupg2 \
     && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && ./llvm.sh 14 && rm -f ./llvm.sh \
     && apt-get -y install "linux-image-$(ls /lib/modules)" \
     && apt-get clean -y
 
-RUN ln -s /usr/bin/llvm-config-14 /usr/bin/llvm-config
+RUN ln -sf /usr/bin/llvm-config-14 /usr/bin/llvm-config
 RUN llvm-config --version | grep -q '^14'
 
 # Install current stable Rust. The first goal of RedBPF build test is to
@@ -47,6 +47,7 @@ RUN if [ x$TARGETPLATFORM = x"linux/arm64" ]; then \
       && sh extract-vmlinux /boot/vmlinuz-* > /boot/vmlinux \
       && rm -f extract-vmlinux; \
     fi
+    
 RUN rm -f extract-btf-aarch64.rs
 
 WORKDIR /build

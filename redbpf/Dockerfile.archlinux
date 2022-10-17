@@ -6,16 +6,16 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 
 RUN pacman --noconfirm -Syu \
     && pacman -S --noconfirm \
-    pkg-config \
-    llvm \
-    llvm-libs \
-    libffi \
-    clang \
-    make \
-    linux-headers \
-    linux
+        pkg-config \
+        llvm \
+        llvm-libs \
+        libffi \
+        clang \
+        make \
+        linux-headers \
+        linux
 
-RUN llvm-config --version | grep -q '^13'
+RUN llvm-config --version | grep -q '^14'
 
 # Install current stable Rust. The first goal of RedBPF build test is to
 # support latest Rust release.

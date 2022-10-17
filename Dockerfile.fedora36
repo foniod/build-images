@@ -1,4 +1,4 @@
-FROM fedora:34
+FROM fedora:36
 
 ARG openssl_arch=linux-x86_64
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -6,21 +6,34 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive
 
-RUN dnf install -y clang-12.0.0 \
-	llvm-12.0.0 \
-	llvm-libs-12.0.0 \
-	llvm-devel-12.0.0 \
-	llvm-static-12.0.0 \
-	kernel \
-	kernel-devel \
-	elfutils-libelf-devel \
-	ca-certificates \
-	musl-devel musl-clang musl-libc musl-libc-static musl-gcc \
-	openssl-devel perl-podlators perl-File-Compare \
-	capnproto \
-	dnf-utils \
-	git \
-	make makedepend zstd bzip2
+RUN echo "max_parallel_download=20" >> /etc/dnf/dnf.conf \
+    && echo "fastestmirror=True" >> /etc/dnf/dnf.conf \
+    && dnf install -y clang-14.0.0 \
+        llvm-14.0.0 \
+        llvm-libs-14.0.0 \
+        llvm-devel-14.0.0 \
+        llvm-static-14.0.0 \
+        kernel \
+        kernel-devel \
+        elfutils-libelf-devel \
+        ca-certificates \
+        musl-devel \
+        musl-clang \
+        musl-libc \
+        musl-libc-static \
+        musl-gcc \
+        openssl-devel \
+        perl-podlators \
+        perl-File-Compare \
+        capnproto \
+        dnf-utils \
+        git \
+	    make \
+        makedepend \
+        zstd \
+        bzip2
+
+RUN llvm-config --version | grep -q '^14'
 
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \

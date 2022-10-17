@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:edge
 
 ARG openssl_arch=linux-x86_64
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -6,10 +6,33 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     PATH=/usr/local/cargo/bin:$PATH \
     DEBIAN_FRONTEND=noninteractive
 
-RUN apk add --no-cache curl wget linux-headers make perl makedepend \
-    grep coreutils binutils linux-lts-dev linux-lts libxml2-dev gcc libc-dev \
-    clang-libs llvm11 llvm11-libs llvm11-dev llvm11-static g++ \
-    openssl openssl-dev openssl-libs-static
+RUN apk add --no-cache \
+    curl \
+    wget \
+    linux-headers \
+    make \
+    perl \
+    makedepend \
+    grep \
+    coreutils \
+    binutils \
+    linux-lts-dev \
+    linux-lts \
+    libxml2-dev \
+    gcc \
+    libc-dev \
+    clang-libs \
+    llvm14 \
+    llvm14-libs \
+    llvm14-dev \
+    llvm14-static \
+    g++ \
+    openssl \
+    openssl-dev \
+    openssl-libs-static
+
+RUN ln -sf /usr/lib/llvm14/bin/llvm-config /usr/bin/llvm-config
+RUN llvm-config --version | grep -q '^14'
 
 RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && sh rustup.sh -y \
