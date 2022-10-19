@@ -61,7 +61,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && rustup --version \
     && cargo --version \
     && rustc --version \
-    && cargo install bindgen \
+    && cargo install bindgen-cli \
     && rm -f rustup.sh
 
 RUN echo "Building OpenSSL" \

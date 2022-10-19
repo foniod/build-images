@@ -46,7 +46,7 @@ RUN curl https://sh.rustup.rs -sSf > rustup.sh \
     && cargo --version \
     && rustc --version \
     && rustup install 1.51 \
-    && cargo install bindgen
+    && cargo install bindgen-cli
 
 ENV OPENSSL_STATIC=1
 
